@@ -10,8 +10,8 @@
 # this dyno's directory structure to download the nginx binary.
 
 NGINX_VERSION=${NGINX_VERSION-1.8.0}
-PCRE_VERSION=${PCRE_VERSION-8.21}
-HEADERS_MORE_VERSION=${HEADERS_MORE_VERSION-0.23}
+PCRE_VERSION=${PCRE_VERSION-8.38}
+HEADERS_MORE_VERSION=${HEADERS_MORE_VERSION-0.28}
 
 nginx_tarball_url=http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz
 pcre_tarball_url=ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-${PCRE_VERSION}.tar.bz2
