@@ -9,13 +9,14 @@
 # Once the dyno has is 'up' you can open your browser and navigate
 # this dyno's directory structure to download the nginx binary.
 
-NGINX_VERSION=${NGINX_VERSION-1.5.7}
+NGINX_VERSION=${NGINX_VERSION-1.8.0}
 PCRE_VERSION=${PCRE_VERSION-8.21}
 HEADERS_MORE_VERSION=${HEADERS_MORE_VERSION-0.23}
 
 nginx_tarball_url=http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz
 pcre_tarball_url=http://garr.dl.sourceforge.net/project/pcre/pcre/${PCRE_VERSION}/pcre-${PCRE_VERSION}.tar.bz2
 headers_more_nginx_module_url=https://github.com/agentzh/headers-more-nginx-module/archive/v${HEADERS_MORE_VERSION}.tar.gz
+nginx_rtmp_module_url=https://github.com/arut/nginx-rtmp-module/archive/master.tar.gz
 
 temp_dir=$(mktemp -d /tmp/nginx.XXXXXXXXXX)
 
@@ -35,12 +36,21 @@ echo "Downloading $pcre_tarball_url"
 echo "Downloading $headers_more_nginx_module_url"
 (cd nginx-${NGINX_VERSION} && curl -L $headers_more_nginx_module_url | tar xvz )
 
+echo "Downloading $nginx_rtmp_module_url"
+(cd nginx-${NGINX_VERSION} && curl -L $nginx_rtmp_module_url | tar xvz )
+
 (
 	cd nginx-${NGINX_VERSION}
 	./configure \
+		--with-http_ssl_module \
+		--with-http_sub_module \
 		--with-pcre=pcre-${PCRE_VERSION} \
+		--with-http_realip_module \
+		--with-http_gzip_static_module \
+		--with-ipv6 \
 		--prefix=/tmp/nginx \
-		--add-module=/${temp_dir}/nginx-${NGINX_VERSION}/headers-more-nginx-module-${HEADERS_MORE_VERSION}
+		--add-module=/${temp_dir}/nginx-${NGINX_VERSION}/headers-more-nginx-module-${HEADERS_MORE_VERSION} \
+		--add-module=/${temp_dir}/nginx-${NGINX_VERSION}/nginx-rtmp-module-master
 	make install
 )
 
